@@ -11,6 +11,9 @@ class TOWEROFHANOI_API APlayerManager : public ACharacter {
 public:
 	APlayerManager();
 
+	UPROPERTY(EditAnywhere)
+	AActor* TowerOne;
+
 protected:
 	virtual void BeginPlay() override;
 

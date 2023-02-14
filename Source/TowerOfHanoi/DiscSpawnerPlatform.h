@@ -11,6 +11,8 @@ class TOWEROFHANOI_API ADiscSpawnerPlatform : public AActor {
 public:	
 	ADiscSpawnerPlatform();
 
+	bool bInPlatform;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -21,7 +23,10 @@ protected:
 	class UStaticMeshComponent* DiscPlatformMesh;
 
 	UFUNCTION()
-	void DiscPlatformOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void DiscPlatformInsideOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void DiscPlatformOutsideOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:	
 	virtual void Tick(float DeltaTime) override;
