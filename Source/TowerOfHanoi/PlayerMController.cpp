@@ -1,6 +1,4 @@
 #include "PlayerMController.h"
-#include "PlayerManager.h"
-#include "DiscSpawnerPlatform.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
@@ -21,11 +19,7 @@ void APlayerMController::BeginPlay() {
 		Subsystem->AddMappingContext(MappingContext, 0);
 	}
 
-	PlayerM = (APlayerManager*)UGameplayStatics::GetActorOfClass(GetWorld(), APlayerManager::StaticClass());
-	DiscPlatform = (ADiscSpawnerPlatform*)UGameplayStatics::GetActorOfClass(GetWorld(), ADiscSpawnerPlatform::StaticClass());
-	DiscCount = 0.f;
 	PressTime = 0.f;
-	DecreaseScale = FVector(0, 0, 0);
 }
 
 void APlayerMController::Tick(float DeltaTime) {
@@ -36,26 +30,17 @@ void APlayerMController::Tick(float DeltaTime) {
 
 void APlayerMController::AddDisc(const FInputActionValue& Value) {
 	const bool Val = Value.Get<bool>();
-
-	if(DiscPlatform->bInPlatform && (DiscCount >= 0.f && DiscCount <= 4.f) && PressTime <= 0.f) {
-		bButtonPressed = true;
-		PressTime = 1.f;
-		DiscCount++;
-		Disc = GetWorld()->SpawnActor<AActor>(DiscToSpawn, PlayerM->TowerOne->GetActorTransform());
-		Disc->SetActorScale3D(FVector(2.4, 2.4, 1.f) - DecreaseScale);
-		DecreaseScale += FVector(.2f, .2f, 0.f);
-		DiscArray.Emplace(Disc);
-	}
 }
 
 void APlayerMController::RemoveDisc(const FInputActionValue& Value) {
 	const bool Val = Value.Get<bool>();
+}
 
-	if(DiscPlatform->bInPlatform && (DiscCount > 0.f && DiscCount <= 5.f) && PressTime <= 0.f) {
-		bButtonPressed = true;
-		PressTime = 1.f;
-		DecreaseScale -= FVector(.2f, .2f, 0.f);
-		DiscArray[--DiscCount]->Destroy();
+void APlayerMController::Pickup(const FInputActionValue& Value) {
+	
+
+	if(const bool Val = Value.Get<bool>()) {
+
 	}
 }
 

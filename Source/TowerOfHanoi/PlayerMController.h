@@ -34,31 +34,16 @@ protected:
 	class UInputAction* MouseClickAction;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> DiscToSpawn;
+	class UInputAction* PickupAction;
 
-	UPROPERTY(EditAnywhere)
-	AActor* TowerOne;
-
-	UPROPERTY()
-	class ADiscSpawnerPlatform* DiscPlatform;
-
-	UPROPERTY()
-	TArray<AActor*> DiscArray;
-
-	UPROPERTY()
-	AActor* Disc;
-
-	UPROPERTY()
-	FVector DecreaseScale;
-
-	UPROPERTY()
-	class APlayerManager* PlayerM;
+	AActor* Wews;
 
 	void AddDisc(const FInputActionValue& Value);
 	void RemoveDisc(const FInputActionValue& Value);
+	void Pickup(const FInputActionValue& Value);
 	void OnClickStart();
 	void OnClickTriggered();
 
 	FHitResult Hit;
-	float ClickTime, DiscCount, PressTime;
+	float ClickTime, PressTime;
 };
