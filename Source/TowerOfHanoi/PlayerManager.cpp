@@ -1,6 +1,11 @@
 #include "PlayerManager.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "LevelSequence.h"
+#include "LevelSequenceActor.h"
+#include "MovieScene.h"
+#include "MovieSceneSequencePlayer.h"
+#include "LevelSequencePlayer.h"
 
 APlayerManager::APlayerManager() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,6 +26,9 @@ void APlayerManager::BeginPlay() {
 	RotateLog = FVector();
 	LastActor = nullptr;
 	RotateSpeed = 100.f;
+
+	ALS = Cast<ALevelSequenceActor>(MySequence);
+	ALS->SequencePlayer->Play();
 }
 
 void APlayerManager::Tick(float DeltaTime) {

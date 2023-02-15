@@ -24,6 +24,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere)
+	class AActor* MySequence;
+
+	class ALevelSequenceActor* ALS;
+
 	UPROPERTY(VisibleAnywhere)
 	class UCapsuleComponent* PlayerTrigger;
 
