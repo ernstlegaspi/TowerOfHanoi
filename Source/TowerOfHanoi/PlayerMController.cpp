@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 APlayerMController::APlayerMController() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,11 +39,21 @@ void APlayerMController::OnClickTriggered() {
 	if(ClickTime <= 0.1f && GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit)) UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Hit.Location);
 }
 
+void APlayerMController::RestartGame(const FInputActionValue& Value) {
+	UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));
+}
+
+void APlayerMController::QuitGame(const FInputActionValue& Value) {
+	UKismetSystemLibrary::QuitGame(GetWorld(), this, EQuitPreference::Quit, true);
+}
+
 void APlayerMController::SetupInputComponent() {
 	Super::SetupInputComponent();
 
 	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent)) {
 		EnhancedInputComponent->BindAction(MouseClickAction, ETriggerEvent::Started, this, &APlayerMController::OnClickStart);
 		EnhancedInputComponent->BindAction(MouseClickAction, ETriggerEvent::Triggered, this, &APlayerMController::OnClickTriggered);
+		EnhancedInputComponent->BindAction(RestartGameAction, ETriggerEvent::Triggered, this, & APlayerMController::RestartGame);
+		EnhancedInputComponent->BindAction(QuitGameAction, ETriggerEvent::Triggered, this, &APlayerMController::QuitGame);
 	}
 }

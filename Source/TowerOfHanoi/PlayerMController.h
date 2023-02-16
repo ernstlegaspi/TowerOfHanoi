@@ -25,19 +25,18 @@ protected:
 	class UInputMappingContext* MappingContext;
 
 	UPROPERTY(EditAnywhere)
-	class UInputAction* AddDiscAction;
-
-	UPROPERTY(EditAnywhere)
-	class UInputAction* RemoveDiscAction;
-
-	UPROPERTY(EditAnywhere)
 	class UInputAction* MouseClickAction;
 
 	UPROPERTY(EditAnywhere)
-	class UInputAction* PickupAction;
+	class UInputAction* RestartGameAction;
+
+	UPROPERTY(EditAnywhere)
+	class UInputAction* QuitGameAction;
 
 	void OnClickStart();
 	void OnClickTriggered();
+	void RestartGame(const FInputActionValue& Value);
+	void QuitGame(const FInputActionValue& Value);
 
 	FHitResult Hit;
 	float ClickTime, PressTime;
