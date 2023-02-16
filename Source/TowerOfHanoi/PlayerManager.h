@@ -47,11 +47,17 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> LogPickupToSpawn;
 
-	UPROPERTY()
-	class AActor* LastActor;
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* AM_Run;
+
+	UPROPERTY(EditAnywhere)
+	class UAnimMontage* AM_Idle;
 
 	UPROPERTY()
 	class AActor* CurrentLog;
+
+	UPROPERTY()
+	class AActor* LastActor;
 
 	UPROPERTY()
 	class AActor* NewLog;
@@ -65,6 +71,9 @@ protected:
 	UPROPERTY()
 	class ATowerOfHanoiGameModeBase* GameMode;
 
+	UPROPERTY()
+	class UAnimInstance* AnimInstance;
+
 	UFUNCTION()
 	void PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -72,7 +81,7 @@ protected:
 	void IsCarrying(FVector TowerLocation);
 
 	FVector RotateLog;
-	bool bIsCarryingLog;
+	bool bIsCarryingLog, bGameWon;
 	float CurrentPos, PrevPos, RotateSpeed, CurrentLogCount;
 
 public:

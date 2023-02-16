@@ -7,6 +7,7 @@
 #include "TowerOfHanoiGameModeBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APlayerManager::APlayerManager() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,12 +25,11 @@ APlayerManager::APlayerManager() {
 void APlayerManager::BeginPlay() {
 	Super::BeginPlay();
 
+	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
 	RotateLog = FVector();
 	LastActor = nullptr;
 	RotateSpeed = 100.f;
-
-	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
-
+	AnimInstance = GetMesh()->GetAnimInstance();
 	// ALS = Cast<ALevelSequenceActor>(MySequence);
 	// ALS->SequencePlayer->Play();
 }
@@ -45,6 +45,17 @@ void APlayerManager::Tick(float DeltaTime) {
 		RotateLog.Z += DeltaTime * RotateSpeed;
 		CurrentLog->SetActorRotation(FRotator(RotateLog.X, RotateLog.Y, RotateLog.Z));
 	}
+
+	if(GetCharacterMovement()->IsMovingOnGround()) {
+		if(GetVelocity() != FVector(0, 0, 0)) {
+			if(AnimInstance->Montage_IsPlaying(AM_Idle)) AnimInstance->Montage_Stop(.5f, AM_Idle);
+			if(!AnimInstance->Montage_IsPlaying(AM_Run)) AnimInstance->Montage_Play(AM_Run);
+		}
+		else {
+			if(AnimInstance->Montage_IsPlaying(AM_Run)) AnimInstance->Montage_Stop(.5f, AM_Run);
+			if(!AnimInstance->Montage_IsPlaying(AM_Idle)) AnimInstance->Montage_Play(AM_Idle);
+		}
+	}
 }
 
 void APlayerManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -52,12 +63,18 @@ void APlayerManager::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 }
 
 void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	if(OtherActor->GetName().Contains("PickupLocation")) {
-		if(OtherActor->GetName().Contains("_1")) {
-			if(bIsCarryingLog) {
-				if(TowerOneArray.Num() > 0) {
-					if(CurrentPos > TowerOneArray[TowerOneArray.Num() - 1]->Pos) {
-						UE_LOG(LogTemp, Warning, TEXT("Biggerrr 1111 %f %f"), CurrentPos, Log->Pos);
+	if(!bGameWon) {
+		if(OtherActor->GetName().Contains("PickupLocation")) {
+			if(OtherActor->GetName().Contains("_1")) {
+				if(bIsCarryingLog) {
+					if(TowerOneArray.Num() > 0) {
+						if(CurrentPos > TowerOneArray[TowerOneArray.Num() - 1]->Pos) {
+							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 1111 %f %f"), CurrentPos, Log->Pos);
+						}
+						else {
+							IsCarrying(TowerOne->GetActorLocation());
+							TowerOneArray.Emplace(Log);
+						}
 					}
 					else {
 						IsCarrying(TowerOne->GetActorLocation());
@@ -65,22 +82,22 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 					}
 				}
 				else {
-					IsCarrying(TowerOne->GetActorLocation());
-					TowerOneArray.Emplace(Log);
+					if(TowerOneArray.Num() > 0) {
+						IsNotCarrying(TowerOneArray[TowerOneArray.Num() - 1]);
+						TowerOneArray.SetNum(TowerOneArray.Num() - 1);
+					}
 				}
 			}
-			else {
-				if(TowerOneArray.Num() > 0) {
-					IsNotCarrying(TowerOneArray[TowerOneArray.Num() - 1]);
-					TowerOneArray.SetNum(TowerOneArray.Num() - 1);
-				}
-			}
-		}
-		else if(OtherActor->GetName().Contains("_2")) {
-			if(bIsCarryingLog) {
-				if(TowerTwoArray.Num() > 0) {
-					if(CurrentPos > TowerTwoArray[TowerTwoArray.Num() - 1]->Pos) {
-						UE_LOG(LogTemp, Warning, TEXT("Biggerrr 22222 %f %f"), CurrentPos, Log->Pos);
+			else if(OtherActor->GetName().Contains("_2")) {
+				if(bIsCarryingLog) {
+					if(TowerTwoArray.Num() > 0) {
+						if(CurrentPos > TowerTwoArray[TowerTwoArray.Num() - 1]->Pos) {
+							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 22222 %f %f"), CurrentPos, Log->Pos);
+						}
+						else {
+							IsCarrying(TowerTwo->GetActorLocation());
+							TowerTwoArray.Emplace(Log);
+						}
 					}
 					else {
 						IsCarrying(TowerTwo->GetActorLocation());
@@ -88,22 +105,23 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 					}
 				}
 				else {
-					IsCarrying(TowerTwo->GetActorLocation());
-					TowerTwoArray.Emplace(Log);
+					if(TowerTwoArray.Num() > 0) {
+						IsNotCarrying(TowerTwoArray[TowerTwoArray.Num() - 1]);
+						TowerTwoArray.SetNum(TowerTwoArray.Num() - 1);
+					}
 				}
 			}
 			else {
-				if(TowerTwoArray.Num() > 0) {
-					IsNotCarrying(TowerTwoArray[TowerTwoArray.Num() - 1]);
-					TowerTwoArray.SetNum(TowerTwoArray.Num() - 1);
-				}
-			}
-		}
-		else {
-			if(bIsCarryingLog) {
-				if(TowerThreeArray.Num() > 0) {
-					if(CurrentPos > TowerThreeArray[TowerThreeArray.Num() - 1]->Pos) {
-						UE_LOG(LogTemp, Warning, TEXT("Biggerrr 3333 %f %f"), CurrentPos, Log->Pos);
+				if(bIsCarryingLog) {
+					if(TowerThreeArray.Num() > 0) {
+						if(CurrentPos > TowerThreeArray[TowerThreeArray.Num() - 1]->Pos) {
+							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 3333 %f %f"), CurrentPos, Log->Pos);
+						}
+						else {
+							IsCarrying(TowerThree->GetActorLocation());
+							TowerThreeArray.Emplace(Log);
+							CurrentLogCount++;
+						}
 					}
 					else {
 						IsCarrying(TowerThree->GetActorLocation());
@@ -112,20 +130,18 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 					}
 				}
 				else {
-					IsCarrying(TowerThree->GetActorLocation());
-					TowerThreeArray.Emplace(Log);
-					CurrentLogCount++;
+					if(TowerThreeArray.Num() > 0) {
+						IsNotCarrying(TowerThreeArray[TowerThreeArray.Num() - 1]);
+						CurrentLogCount--;
+						TowerThreeArray.SetNum(TowerThreeArray.Num() - 1);
+					}
 				}
-			}
-			else {
-				if(TowerThreeArray.Num() > 0) {
-					IsNotCarrying(TowerThreeArray[TowerThreeArray.Num() - 1]);
-					CurrentLogCount--;
-					TowerThreeArray.SetNum(TowerThreeArray.Num() - 1);
-				}
-			}
 
-			if(CurrentLogCount == GameMode->LogCount) UE_LOG(LogTemp, Warning, TEXT("YOU WON!"));
+				if(CurrentLogCount == GameMode->LogCount) {
+					UE_LOG(LogTemp, Warning, TEXT("YOU WON!"));
+					bGameWon = true;
+				}
+			}
 		}
 	}
 }
