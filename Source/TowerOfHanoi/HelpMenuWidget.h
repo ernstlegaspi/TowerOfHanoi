@@ -20,6 +20,8 @@ class TOWEROFHANOI_API UHelpMenuWidget : public UUserWidget {
 public:
 	virtual void NativeConstruct() override;
 
+	bool bFourthStage;
+
 protected:
 	UPROPERTY()
 	EDialogStage DialogStage;

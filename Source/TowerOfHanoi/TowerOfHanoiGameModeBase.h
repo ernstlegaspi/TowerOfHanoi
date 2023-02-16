@@ -9,6 +9,9 @@ UCLASS()
 class TOWEROFHANOI_API ATowerOfHanoiGameModeBase : public AGameModeBase {
 	GENERATED_BODY()
 
+public:
+	float LogCount;
+
 protected:
 	ATowerOfHanoiGameModeBase();
 
@@ -21,10 +24,16 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> HelpMenuBPWidget;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> InputMenuBPWidget;
+
 	UPROPERTY()
 	class UStartMenuWidget* StartMenuClass;
 
 	UPROPERTY()
 	class UHelpMenuWidget* HelpMenuClass;
+
+	UPROPERTY()
+	class UInputMenuWidget* InputMenuClass;
 	
 };

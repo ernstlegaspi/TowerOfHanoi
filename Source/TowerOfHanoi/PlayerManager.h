@@ -21,6 +21,15 @@ public:
 	UPROPERTY()
 	TArray<ALogPickup*> TowerThreeArray;
 
+	UPROPERTY()
+	class AActor* TowerOne;
+
+	UPROPERTY()
+	class AActor* TowerTwo;
+
+	UPROPERTY()
+	class AActor* TowerThree;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -38,15 +47,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> LogPickupToSpawn;
 
-	UPROPERTY(EditAnywhere)
-	class AActor* TowerOne;
-
-	UPROPERTY(EditAnywhere)
-	class AActor* TowerTwo;
-
-	UPROPERTY(EditAnywhere)
-	class AActor* TowerThree;
-
 	UPROPERTY()
 	class AActor* LastActor;
 
@@ -61,6 +61,9 @@ protected:
 	
 	UPROPERTY()
 	class ALogPickup* Log;
+
+	UPROPERTY()
+	class ATowerOfHanoiGameModeBase* GameMode;
 
 	UFUNCTION()
 	void PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

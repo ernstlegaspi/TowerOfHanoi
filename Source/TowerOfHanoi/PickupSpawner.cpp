@@ -1,4 +1,5 @@
 #include "PickupSpawner.h"
+#include "TowerOfHanoiGameModeBase.h"
 #include "LogPickup.h"
 #include "PlayerManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -10,21 +11,21 @@ APickupSpawner::APickupSpawner() {
 void APickupSpawner::BeginPlay() {
 	Super::BeginPlay();
 
-	PickupCount = 3.f;
 	DecreaseScale = FVector(0, 0, 0);
-
+	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
 	Player = (APlayerManager*)UGameplayStatics::GetActorOfClass(GetWorld(), APlayerManager::StaticClass());
+	LogCount = GameMode->LogCount;
 }
 
 void APickupSpawner::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if(PickupCount > 0.f) {
+	if(LogCount > 0.f) {
 		ALog = GetWorld()->SpawnActor<AActor>(LogToSpawn, GetActorTransform());
-		ALog->SetActorScale3D(FVector(1, 1, 1) - DecreaseScale);
-		DecreaseScale += FVector(.2, .2, .2);
+		ALog->SetActorScale3D(FVector(.5, .5, .5) - DecreaseScale);
+		DecreaseScale += FVector(.03, .03, .03);
 		Log = Cast<ALogPickup>(ALog);
-		Log->Pos = PickupCount--;
+		Log->Pos = LogCount--;
 		Player->TowerOneArray.Emplace(Log);
 	}
 }

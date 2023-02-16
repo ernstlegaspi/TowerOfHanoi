@@ -1,11 +1,12 @@
 #include "PlayerManager.h"
-#include "Components/CapsuleComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "LevelSequence.h"
 #include "LevelSequenceActor.h"
+#include "LevelSequencePlayer.h"
 #include "MovieScene.h"
 #include "MovieSceneSequencePlayer.h"
-#include "LevelSequencePlayer.h"
+#include "TowerOfHanoiGameModeBase.h"
+#include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 APlayerManager::APlayerManager() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,8 +28,10 @@ void APlayerManager::BeginPlay() {
 	LastActor = nullptr;
 	RotateSpeed = 100.f;
 
-	ALS = Cast<ALevelSequenceActor>(MySequence);
-	ALS->SequencePlayer->Play();
+	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
+
+	// ALS = Cast<ALevelSequenceActor>(MySequence);
+	// ALS->SequencePlayer->Play();
 }
 
 void APlayerManager::Tick(float DeltaTime) {
@@ -73,7 +76,7 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				}
 			}
 		}
-		else if(OtherActor->GetName().Contains("_4")) {
+		else if(OtherActor->GetName().Contains("_2")) {
 			if(bIsCarryingLog) {
 				if(TowerTwoArray.Num() > 0) {
 					if(CurrentPos > TowerTwoArray[TowerTwoArray.Num() - 1]->Pos) {
@@ -106,26 +109,23 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 						IsCarrying(TowerThree->GetActorLocation());
 						TowerThreeArray.Emplace(Log);
 						CurrentLogCount++;
-						UE_LOG(LogTemp, Warning, TEXT("count: %f"), CurrentLogCount);
 					}
 				}
 				else {
 					IsCarrying(TowerThree->GetActorLocation());
 					TowerThreeArray.Emplace(Log);
 					CurrentLogCount++;
-					UE_LOG(LogTemp, Warning, TEXT("count: %f"), CurrentLogCount);
 				}
 			}
 			else {
 				if(TowerThreeArray.Num() > 0) {
 					IsNotCarrying(TowerThreeArray[TowerThreeArray.Num() - 1]);
 					CurrentLogCount--;
-					UE_LOG(LogTemp, Warning, TEXT("count: %f"), CurrentLogCount);
 					TowerThreeArray.SetNum(TowerThreeArray.Num() - 1);
 				}
 			}
 
-			if(CurrentLogCount == 3) UE_LOG(LogTemp, Warning, TEXT("YOU WON!"));
+			if(CurrentLogCount == GameMode->LogCount) UE_LOG(LogTemp, Warning, TEXT("YOU WON!"));
 		}
 	}
 }

@@ -24,8 +24,12 @@ void UHelpMenuWidget::NextButtonOnClicked() {
 			DialogStage = EDialogStage::Fourth;
 			HelpText->SetText(FText::FromString("A stone is placed in front of the yard. Step on this stone to get a wood log and step again to another stone to place the wood log."));
 			break;
-		default:
+		case EDialogStage::Fourth:
 			HelpText->SetText(FText::FromString("place all the logs in the third yard (rightmost yard) in ascending order just like on how you will play tower oh hanoi. good luck and have fun!"));
+			DialogStage = EDialogStage::Default;
+			break;
+		default:
+			bFourthStage = true;
 			break;
 	}
 }

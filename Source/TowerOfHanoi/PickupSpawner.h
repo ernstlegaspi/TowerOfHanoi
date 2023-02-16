@@ -26,8 +26,11 @@ protected:
 	UPROPERTY()
 	class APlayerManager* Player;
 
+	UPROPERTY()
+	class ATowerOfHanoiGameModeBase* GameMode;
+
 	FVector DecreaseScale;
-	float PickupCount;
+	float LogCount;
 
 public:	
 	virtual void Tick(float DeltaTime) override;
