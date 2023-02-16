@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class UAnimMontage* AM_Idle;
 
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* NS_Portal;
+
 	UPROPERTY()
 	class AActor* CurrentLog;
 
@@ -74,15 +77,19 @@ protected:
 	UPROPERTY()
 	class UAnimInstance* AnimInstance;
 
+	UPROPERTY()
+	class UNiagaraComponent* NC_Portal;
+
 	UFUNCTION()
 	void PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void IsNotCarrying(class ALogPickup* ALP);
 	void IsCarrying(FVector TowerLocation);
 
+	FString BiggerLogText;
 	FVector RotateLog;
 	bool bIsCarryingLog, bGameWon;
-	float CurrentPos, PrevPos, RotateSpeed, CurrentLogCount, BiggerLogTimer;
+	float CurrentPos, PrevPos, RotateSpeed, CurrentLogCount, BiggerLogTimer, PortalTimer;
 
 public:
 	virtual void Tick(float DeltaTime) override;

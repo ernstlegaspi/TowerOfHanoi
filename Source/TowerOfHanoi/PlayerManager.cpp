@@ -8,6 +8,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 APlayerManager::APlayerManager() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -28,9 +30,11 @@ void APlayerManager::BeginPlay() {
 	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
 	RotateLog = FVector();
 	LastActor = nullptr;
+	NC_Portal = nullptr;
 	RotateSpeed = 100.f;
 	AnimInstance = GetMesh()->GetAnimInstance();
 	BiggerLogTimer = 0.f;
+	BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
 	// ALS = Cast<ALevelSequenceActor>(MySequence);
 	// ALS->SequencePlayer->Play();
 }
@@ -63,6 +67,15 @@ void APlayerManager::Tick(float DeltaTime) {
 
 		if(BiggerLogTimer <= 0.1f) GameMode->BiggerLogText = "";
 	}
+
+	if(NC_Portal != nullptr) {
+		PortalTimer -= DeltaTime;
+
+		if(PortalTimer <= 0.f) {
+			NC_Portal->DestroyInstance();
+			NC_Portal = nullptr;
+		}
+	}
 }
 
 void APlayerManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -76,7 +89,7 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerOneArray.Num() > 0) {
 						if(CurrentPos > TowerOneArray[TowerOneArray.Num() - 1]->Pos) {
-							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							GameMode->BiggerLogText = BiggerLogText;
 							BiggerLogTimer = 3.f;
 						}
 						else {
@@ -100,7 +113,7 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerTwoArray.Num() > 0) {
 						if(CurrentPos > TowerTwoArray[TowerTwoArray.Num() - 1]->Pos) {
-							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							GameMode->BiggerLogText = BiggerLogText;
 							BiggerLogTimer = 3.f;
 						}
 						else {
@@ -124,7 +137,7 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerThreeArray.Num() > 0) {
 						if(CurrentPos > TowerThreeArray[TowerThreeArray.Num() - 1]->Pos) {
-							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							GameMode->BiggerLogText = BiggerLogText;
 							BiggerLogTimer = 3.f;
 						}
 						else {
@@ -148,8 +161,10 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				}
 
 				if(CurrentLogCount == GameMode->LogCount) {
-					UE_LOG(LogTemp, Warning, TEXT("YOU WON!"));
+					APlayerController* PlayerController = Cast<APlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+					GameMode->bFinishGame = true;
 					bGameWon = true;
+					PlayerController->SetPause(true);
 				}
 			}
 		}
@@ -175,6 +190,8 @@ void APlayerManager::IsCarrying(FVector TowerLocation) {
 	NewLog->SetActorLocation(TowerLocation);
 	Log = Cast<ALogPickup>(NewLog);
 	Log->Pos = CurrentPos;
+	PortalTimer = 1.f;
+	NC_Portal = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), NS_Portal, TowerLocation);
 	CurrentLog->Destroy();
 	bIsCarryingLog = false;
 	GameMode->BiggerLogText = "";
