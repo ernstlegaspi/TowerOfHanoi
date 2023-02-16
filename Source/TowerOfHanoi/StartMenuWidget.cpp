@@ -10,5 +10,5 @@ void UStartMenuWidget::NativeConstruct() {
 }
 
 void UStartMenuWidget::StartButtonOnClicked() {
-	UE_LOG(LogTemp, Warning, TEXT("Clickeddddd"));
+	bStartButtonClicked = true;
 }

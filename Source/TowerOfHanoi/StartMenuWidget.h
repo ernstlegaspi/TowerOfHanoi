@@ -11,11 +11,12 @@ class TOWEROFHANOI_API UStartMenuWidget : public UUserWidget {
 public:
 	virtual void NativeConstruct() override;
 
+	bool bStartButtonClicked;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* StartButton;
 
 	UFUNCTION()
 	void StartButtonOnClicked();
-
 };

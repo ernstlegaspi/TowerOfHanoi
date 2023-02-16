@@ -18,7 +18,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> StartMenuBPWidget;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> HelpMenuBPWidget;
+
 	UPROPERTY()
 	class UStartMenuWidget* StartMenuClass;
+
+	UPROPERTY()
+	class UHelpMenuWidget* HelpMenuClass;
 	
 };

@@ -1,4 +1,5 @@
 #include "TowerOfHanoiGameModeBase.h"
+#include "HelpMenuWidget.h"
 #include "StartMenuWidget.h"
 
 ATowerOfHanoiGameModeBase::ATowerOfHanoiGameModeBase() {
@@ -16,4 +17,11 @@ void ATowerOfHanoiGameModeBase::BeginPlay() {
 
 void ATowerOfHanoiGameModeBase::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	if(StartMenuClass->bStartButtonClicked) {
+		StartMenuClass->RemoveFromViewport();
+		StartMenuClass->bStartButtonClicked = false;
+		HelpMenuClass = Cast<UHelpMenuWidget>(CreateWidget(GetWorld(), HelpMenuBPWidget));
+		HelpMenuClass->AddToViewport();
+	}
 }
