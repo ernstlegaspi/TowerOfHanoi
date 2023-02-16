@@ -82,7 +82,7 @@ protected:
 
 	FVector RotateLog;
 	bool bIsCarryingLog, bGameWon;
-	float CurrentPos, PrevPos, RotateSpeed, CurrentLogCount;
+	float CurrentPos, PrevPos, RotateSpeed, CurrentLogCount, BiggerLogTimer;
 
 public:
 	virtual void Tick(float DeltaTime) override;

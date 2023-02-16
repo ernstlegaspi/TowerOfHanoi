@@ -30,6 +30,7 @@ void APlayerManager::BeginPlay() {
 	LastActor = nullptr;
 	RotateSpeed = 100.f;
 	AnimInstance = GetMesh()->GetAnimInstance();
+	BiggerLogTimer = 0.f;
 	// ALS = Cast<ALevelSequenceActor>(MySequence);
 	// ALS->SequencePlayer->Play();
 }
@@ -56,6 +57,12 @@ void APlayerManager::Tick(float DeltaTime) {
 			if(!AnimInstance->Montage_IsPlaying(AM_Idle)) AnimInstance->Montage_Play(AM_Idle);
 		}
 	}
+
+	if(GameMode->BiggerLogText != "") {
+		BiggerLogTimer -= DeltaTime;
+
+		if(BiggerLogTimer <= 0.1f) GameMode->BiggerLogText = "";
+	}
 }
 
 void APlayerManager::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
@@ -69,7 +76,8 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerOneArray.Num() > 0) {
 						if(CurrentPos > TowerOneArray[TowerOneArray.Num() - 1]->Pos) {
-							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 1111 %f %f"), CurrentPos, Log->Pos);
+							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							BiggerLogTimer = 3.f;
 						}
 						else {
 							IsCarrying(TowerOne->GetActorLocation());
@@ -92,7 +100,8 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerTwoArray.Num() > 0) {
 						if(CurrentPos > TowerTwoArray[TowerTwoArray.Num() - 1]->Pos) {
-							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 22222 %f %f"), CurrentPos, Log->Pos);
+							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							BiggerLogTimer = 3.f;
 						}
 						else {
 							IsCarrying(TowerTwo->GetActorLocation());
@@ -115,7 +124,8 @@ void APlayerManager::PlayerOverlap(UPrimitiveComponent* HitComp, AActor* OtherAc
 				if(bIsCarryingLog) {
 					if(TowerThreeArray.Num() > 0) {
 						if(CurrentPos > TowerThreeArray[TowerThreeArray.Num() - 1]->Pos) {
-							UE_LOG(LogTemp, Warning, TEXT("Biggerrr 3333 %f %f"), CurrentPos, Log->Pos);
+							GameMode->BiggerLogText = "The wood log you are holding is bigger than the last wood log in the yard.";
+							BiggerLogTimer = 3.f;
 						}
 						else {
 							IsCarrying(TowerThree->GetActorLocation());
@@ -155,6 +165,8 @@ void APlayerManager::IsNotCarrying(class ALogPickup* ALP) {
 	CurrentLog->SetActorLocation(GetActorLocation() + FVector(0, 0, 400));
 	LastActor->Destroy();
 	bIsCarryingLog = true;
+	GameMode->BiggerLogText = "";
+	BiggerLogTimer = 0.f;
 }
 
 void APlayerManager::IsCarrying(FVector TowerLocation) {
@@ -165,4 +177,6 @@ void APlayerManager::IsCarrying(FVector TowerLocation) {
 	Log->Pos = CurrentPos;
 	CurrentLog->Destroy();
 	bIsCarryingLog = false;
+	GameMode->BiggerLogText = "";
+	BiggerLogTimer = 0.f;
 }

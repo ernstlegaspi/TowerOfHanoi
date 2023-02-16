@@ -11,6 +11,7 @@ class TOWEROFHANOI_API ATowerOfHanoiGameModeBase : public AGameModeBase {
 
 public:
 	float LogCount;
+	FString BiggerLogText;
 
 protected:
 	ATowerOfHanoiGameModeBase();
@@ -27,6 +28,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> InputMenuBPWidget;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> BiggerLogBPWidget;
+
 	UPROPERTY()
 	class UStartMenuWidget* StartMenuClass;
 
@@ -35,5 +39,8 @@ protected:
 
 	UPROPERTY()
 	class UInputMenuWidget* InputMenuClass;
+
+	UPROPERTY()
+	class UBiggerLogWidget* BiggerLogClass;
 	
 };

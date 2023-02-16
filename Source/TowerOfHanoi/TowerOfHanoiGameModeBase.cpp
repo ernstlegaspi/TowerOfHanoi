@@ -1,4 +1,5 @@
 #include "TowerOfHanoiGameModeBase.h"
+#include "BiggerLogWidget.h"
 #include "HelpMenuWidget.h"
 #include "InputMenuWidget.h"
 #include "StartMenuWidget.h"
@@ -13,6 +14,8 @@ void ATowerOfHanoiGameModeBase::BeginPlay() {
 
 	HelpMenuClass = nullptr;
 	InputMenuClass = nullptr;
+	BiggerLogClass = nullptr;
+	BiggerLogText = "";
 	LogCount = 0;
 
 	if(GEngine) {
@@ -55,5 +58,10 @@ void ATowerOfHanoiGameModeBase::Tick(float DeltaTime) {
 			LogCount = InputMenuClass->LogCount;
 			InputMenuClass->RemoveFromParent();
 		}
+	}
+
+	if(BiggerLogText != "") {
+		BiggerLogClass = Cast<UBiggerLogWidget>(CreateWidget(GetWorld(), BiggerLogBPWidget));
+		BiggerLogClass->AddToViewport();
 	}
 }
