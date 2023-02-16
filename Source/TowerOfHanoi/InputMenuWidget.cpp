@@ -5,6 +5,7 @@
 void UInputMenuWidget::NativeConstruct() {
 	Super::NativeConstruct();
 
+	// bind button with their specific numbers
 	Button3->OnClicked.AddDynamic(this, &UInputMenuWidget::Button3Click);
 	Button4->OnClicked.AddDynamic(this, &UInputMenuWidget::Button4Click);
 	Button5->OnClicked.AddDynamic(this, &UInputMenuWidget::Button5Click);
@@ -14,30 +15,32 @@ void UInputMenuWidget::NativeConstruct() {
 }
 
 void UInputMenuWidget::Button3Click() {
-	SetValues(3);
+	SetValues(3, 7);
 }
 
 void UInputMenuWidget::Button4Click() {
-	SetValues(4);
+	SetValues(4, 15);
 }
 
 void UInputMenuWidget::Button5Click() {
-	SetValues(5);
+	SetValues(5, 31);
 }
 
 void UInputMenuWidget::Button6Click() {
-	SetValues(6);
+	SetValues(6, 63);
 }
 
 void UInputMenuWidget::Button7Click() {
-	SetValues(7);
+	SetValues(7, 127);
 }
 
 void UInputMenuWidget::Button8Click() {
-	SetValues(8);
+	SetValues(8, 255);
 }
 
-void UInputMenuWidget::SetValues(uint8 Num) {
+// set values if button is clickeds
+void UInputMenuWidget::SetValues(uint8 Num, int MM) {
 	LogCount = Num;
 	bButtonClicked = true;
+	MinMoves = MM;
 }

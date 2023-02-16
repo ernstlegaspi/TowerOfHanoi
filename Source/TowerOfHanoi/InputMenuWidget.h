@@ -11,10 +11,17 @@ class TOWEROFHANOI_API UInputMenuWidget : public UUserWidget {
 public:
 	virtual void NativeConstruct() override;
 
+	// declare a public float variable to get the log count that the player will play
 	float LogCount;
+
+	// if any button is clicked
 	bool bButtonClicked;
 
+	// assign the min moves of the specific log count
+	int MinMoves;
+
 protected:
+	// declare a variable that has a button widget data type
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* Button3;
 
@@ -36,6 +43,7 @@ protected:
 	UPROPERTY()
 	class APickupSpawner* Pickup;
 
+	// create a function to bind with their specific button numbers
 	UFUNCTION()
 	void Button3Click();
 
@@ -54,7 +62,8 @@ protected:
 	UFUNCTION()
 	void Button8Click();
 
+	// create a function to optimize the repitition of setting the values
 	UFUNCTION()
-	void SetValues(uint8 Num);
+	void SetValues(uint8 Num, int MM);
 
 };

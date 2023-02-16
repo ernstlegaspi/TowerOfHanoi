@@ -5,12 +5,15 @@
 void UHelpMenuWidget::NativeConstruct() {
 	Super::NativeConstruct();
 	
+	// set the default value to First stage
 	DialogStage = EDialogStage::First;
 
+	// bind the nextbutton widget to NextButtonClicked function
 	if(NextButton) NextButton->OnClicked.AddDynamic(this, &UHelpMenuWidget::NextButtonOnClicked);
 }
 
 void UHelpMenuWidget::NextButtonOnClicked() {
+	// check the current instruction stage of the player
 	switch(DialogStage) {
 		case EDialogStage::First:
 			DialogStage = EDialogStage::Second;
@@ -33,7 +36,7 @@ void UHelpMenuWidget::NextButtonOnClicked() {
 			DialogStage = EDialogStage::Default;
 			break;
 		default:
-			bFourthStage = true;
+			bFifthStage = true;
 			break;
 	}
 }

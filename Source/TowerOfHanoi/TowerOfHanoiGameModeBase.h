@@ -11,7 +11,7 @@ class TOWEROFHANOI_API ATowerOfHanoiGameModeBase : public AGameModeBase {
 
 public:
 	FString BiggerLogText;
-	float LogCount;
+	float LogCount, MinMoves, MovesCount;
 	bool bFinishGame;
 
 protected:
@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> FinishGameBPWidget;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> LogCountBPWidget;
+
 	UPROPERTY()
 	class UStartMenuWidget* StartMenuClass;
 
@@ -49,5 +52,10 @@ protected:
 
 	UPROPERTY()
 	class UFinishGameWidget* FinishGameClass;
+
+	UPROPERTY()
+	class ULogCountWidget* LogCountClass;
 	
+	// assign the min moves variable only once
+	bool bMinMoveOnlyOnce;
 };

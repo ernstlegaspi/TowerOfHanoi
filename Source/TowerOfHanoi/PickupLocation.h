@@ -14,17 +14,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	// create a pickup location trigger for the player to step on
 	UPROPERTY(VisibleAnywhere)
 	class UBoxComponent* LocationTrigger;
 
+	// create a pickup location mesh
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* LocationMesh;
-
-	UFUNCTION()
-	void LocationInsideOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-	UFUNCTION()
-	void LocationOutsideOverlap(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:	
 	virtual void Tick(float DeltaTime) override;

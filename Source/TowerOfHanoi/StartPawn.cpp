@@ -8,6 +8,7 @@ AStartPawn::AStartPawn() {
 void AStartPawn::BeginPlay() {
 	Super::BeginPlay();
 
+	// shows the mouse cursor of the game to click on the UI of the start of the game
 	if(APlayerController* PlayerController = Cast<APlayerController>(GetController())) {
 		PlayerController->bShowMouseCursor = true;
 		PlayerController->DefaultMouseCursor = EMouseCursor::Default;

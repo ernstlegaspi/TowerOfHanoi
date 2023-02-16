@@ -11,10 +11,12 @@ class TOWEROFHANOI_API UBiggerLogWidget : public UUserWidget {
 public:
 	virtual void NativeConstruct() override;
 
+	// Create a function to set the text of BiggerLogText variable
 	UFUNCTION()
 	FText SetBiggerLogText();
 
 protected:
+	// Declare a variable with a data type of text block widget
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UTextBlock* BiggerLogText;
 

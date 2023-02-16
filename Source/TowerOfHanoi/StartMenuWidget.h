@@ -14,6 +14,7 @@ public:
 	bool bStartButtonClicked;
 
 protected:
+	// make a variable of button widget
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* StartButton;
 

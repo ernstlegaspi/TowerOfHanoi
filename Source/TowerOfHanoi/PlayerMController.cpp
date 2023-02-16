@@ -3,6 +3,7 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TowerOfHanoiGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -21,6 +22,7 @@ void APlayerMController::BeginPlay() {
 	}
 
 	PressTime = 0.f;
+	GameMode = (ATowerOfHanoiGameModeBase*)UGameplayStatics::GetActorOfClass(GetWorld(), ATowerOfHanoiGameModeBase::StaticClass());
 }
 
 void APlayerMController::Tick(float DeltaTime) {
@@ -30,12 +32,15 @@ void APlayerMController::Tick(float DeltaTime) {
 }
 
 void APlayerMController::OnClickStart() {
+	// reset the click time if the click is started again
 	ClickTime = 0.f;
 }
 
 void APlayerMController::OnClickTriggered() {
+	// check if the click is short click or if the player is holding the left click
 	ClickTime += GetWorld()->GetDeltaSeconds();
 
+	// check if the player has clicked on anything
 	if(ClickTime <= 0.1f && GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit)) UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, Hit.Location);
 }
 
