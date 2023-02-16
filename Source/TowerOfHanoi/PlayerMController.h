@@ -36,11 +36,6 @@ protected:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* PickupAction;
 
-	AActor* Wews;
-
-	void AddDisc(const FInputActionValue& Value);
-	void RemoveDisc(const FInputActionValue& Value);
-	void Pickup(const FInputActionValue& Value);
 	void OnClickStart();
 	void OnClickTriggered();
 

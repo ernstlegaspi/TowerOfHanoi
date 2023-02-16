@@ -28,22 +28,6 @@ void APlayerMController::Tick(float DeltaTime) {
 	if(PressTime > 0.f) PressTime -= DeltaTime;
 }
 
-void APlayerMController::AddDisc(const FInputActionValue& Value) {
-	const bool Val = Value.Get<bool>();
-}
-
-void APlayerMController::RemoveDisc(const FInputActionValue& Value) {
-	const bool Val = Value.Get<bool>();
-}
-
-void APlayerMController::Pickup(const FInputActionValue& Value) {
-	
-
-	if(const bool Val = Value.Get<bool>()) {
-
-	}
-}
-
 void APlayerMController::OnClickStart() {
 	ClickTime = 0.f;
 }
@@ -60,7 +44,5 @@ void APlayerMController::SetupInputComponent() {
 	if(UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent)) {
 		EnhancedInputComponent->BindAction(MouseClickAction, ETriggerEvent::Started, this, &APlayerMController::OnClickStart);
 		EnhancedInputComponent->BindAction(MouseClickAction, ETriggerEvent::Triggered, this, &APlayerMController::OnClickTriggered);
-		EnhancedInputComponent->BindAction(AddDiscAction, ETriggerEvent::Triggered, this, &APlayerMController::AddDisc);
-		EnhancedInputComponent->BindAction(RemoveDiscAction, ETriggerEvent::Triggered, this, &APlayerMController::RemoveDisc);
 	}
 }
