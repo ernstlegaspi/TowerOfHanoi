@@ -22,27 +22,33 @@ void APickupSpawner::BeginPlay() {
 
 	// assign the log count that the player has picked in the instruction stage
 	LogCount = GameMode->LogCount;
+	SpawnTimer = 0.f;
 }
 
 void APickupSpawner::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
 	if(LogCount > 0.f) {
-		// assign the spawned log to an actor variable
-		ALog = GetWorld()->SpawnActor<AActor>(LogToSpawn, GetActorTransform());
+		SpawnTimer -= DeltaTime;
 
-		// set the scale of the spawn log
-		// the scale of the log is decreasing per spawn
-		ALog->SetActorScale3D(FVector(.5, .5, .5) - DecreaseScale);
+		if(SpawnTimer <= 0.f) {
+			// assign the spawned log to an actor variable
+			ALog = GetWorld()->SpawnActor<AActor>(LogToSpawn, GetActorTransform());
 
-		// the variable used to decrease the scale of the log
-		DecreaseScale += FVector(.03, .03, .03);
+			// set the scale of the spawn log
+			// the scale of the log is decreasing per spawn
+			ALog->SetActorScale3D(FVector(.65, .65, .65) - DecreaseScale);
 
-		// assign the position of the spawned log by descending order (8 is the biggest log and n is the smallest log)
-		Log = Cast<ALogPickup>(ALog);
-		Log->Pos = LogCount--;
+			// the variable used to decrease the scale of the log
+			DecreaseScale += FVector(.05, .05, .05);
 
-		// insert the logs to an array
-		Player->TowerOneArray.Emplace(Log);
+			// assign the position of the spawned log by descending order (8 is the biggest log and n is the smallest log)
+			Log = Cast<ALogPickup>(ALog);
+			Log->Pos = LogCount--;
+
+			// insert the logs to an array
+			Player->TowerOneArray.Emplace(Log);
+			SpawnTimer = 1.f;
+		}
 	}
 }

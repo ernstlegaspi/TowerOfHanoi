@@ -35,7 +35,7 @@ protected:
 	class ATowerOfHanoiGameModeBase* GameMode;
 
 	FVector DecreaseScale;
-	float LogCount;
+	float LogCount, SpawnTimer;
 
 public:	
 	virtual void Tick(float DeltaTime) override;

@@ -25,8 +25,8 @@ void ATowerOfHanoiGameModeBase::BeginPlay() {
 		if(UGameUserSettings* UserSettings = GEngine->GetGameUserSettings()) {
 			UserSettings->SetScreenResolution(UserSettings->GetDesktopResolution());
 			UserSettings->SetFullscreenMode(EWindowMode::WindowedFullscreen);
-			// UserSettings->LoadSettings(false);
-			// UserSettings->ApplySettings(false);
+			UserSettings->LoadSettings(false);
+			UserSettings->ApplySettings(false);
 		}
 	}
 
